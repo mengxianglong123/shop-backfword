@@ -1,0 +1,9 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ml.shop_admin.mapper.shiro.ShiroMapper">
+    <!--***********查询管理员信息***********-->
+    <select id="selByAccount" resultType="Admin">
+        select * from admin where account = #{account}
+    </select>
+</mapper>

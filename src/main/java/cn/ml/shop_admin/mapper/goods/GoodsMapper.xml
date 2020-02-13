@@ -1,0 +1,65 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ml.shop_admin.mapper.goods.GoodsMapper">
+    <!-- 映射关系-->
+    <resultMap id="GoodsMap" type="Goods">
+        <id column="id" property="id"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="price" property="price"/>
+        <result column="info" property="info"/>
+        <result column="sellerId" property="sellerId"/>
+        <association property="seller" javaType="Seller">
+            <id column="sid" property="id"/>
+            <result column="sellerName" property="sellerName"/>
+            <result column="mark" property="mark"/>
+        </association>
+    </resultMap>
+    <!--********************按照id查询商品********************-->
+    <select id="selById" resultMap="GoodsMap">
+        select g.*,s.id sid,s.sellerName,s.mark
+        from goods g
+        inner join seller s
+        on g.sellerId = s.id
+        where g.id = #{id}
+    </select>
+    <!--********************按照id更新商品********************-->
+    <update id="updateById">
+        update goods
+        set goodsName = #{goods.goodsName},
+        price = #{goods.price},
+        info = #{goods.info},
+        sellerId = #{goods.sellerId}
+        where id = #{goods.id}
+    </update>
+    <!--********************分页查询商品(多表)********************-->
+    <select id="selByPage" resultMap="GoodsMap">
+        select g.*,s.id sid,s.sellerName,s.mark
+        from goods g
+        inner join seller s
+        on g.sellerId = s.id
+        limit #{pageNum},5
+    </select>
+    <!--********************按照名字模糊查询商品********************-->
+    <select id="selByName" resultMap="GoodsMap">
+        select g.*,s.id sid,s.sellerName,s.mark
+        from goods g
+        inner join seller s
+        on g.sellerId = s.id
+        where g.goodsName like concat('%',#{name},'%')
+    </select>
+    <!--********************新增商品********************-->
+    <insert id="addGoods">
+        insert into goods
+        values (null,#{goods.goodsName},#{goods.price},#{goods.info},#{goods.sellerId})
+    </insert>
+    <!--********************删除商品********************-->
+    <delete id="delGoods">
+        delete from goods
+        where id = #{id}
+    </delete>
+    <!--********************删除商品********************-->
+    <select id="selNum" resultType="Integer">
+        select count(*) from goods
+    </select>
+</mapper>
